@@ -5,7 +5,7 @@
 + 后端实现 java ssm
 + 前端实现 vue
 + 数据库 mysql
-+ 编译环境 win10 idea2020.1
++ 编译环境 win10 idea2020.1 jdk1.8
 
 #### 项目需求
 
@@ -45,6 +45,8 @@
 
 + 选课表
 
-+ test'
++ test from lyh
 
 + test from hc
+
++ test from ss
