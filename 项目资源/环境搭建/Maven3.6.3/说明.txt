@@ -1,0 +1,1 @@
+用附带的settings.xml文件覆盖解压后apache-maven-3.6.3\conf下的settings.xml文件
