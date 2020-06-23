@@ -24,7 +24,6 @@
       highlight-current-row
       style="width: 100%;"
       @current-change="handleCurrentChange">
-
       <el-table-column label="课号" prop="kh" align="center" width="150px">
         <template slot-scope="{row}">
           <span>{{ row.kh }}</span>
@@ -62,57 +61,58 @@
     </el-button>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-<p></p>
-<div v-if="classStatus">
-    <div class="filter-container">
+    <p />
+    <div v-if="classStatus">
+      <div class="filter-container">
 
-      <el-input v-model="listQueryClass.gh" placeholder="教师号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilterClass" />
+        <el-input v-model="listQueryClass.gh" placeholder="教师号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilterClass" />
 
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilterClass">
-        查询
-      </el-button>
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilterClass">
+          查询
+        </el-button>
 
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-download" @click="handleClearClass">
-        清空
-      </el-button>
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-download" @click="handleClearClass">
+          清空
+        </el-button>
 
-    </div>
+      </div>
 
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="listClass"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-      @current-change="handleCurrentClassChange">
+      <el-table
+        :key="tableKey"
+        v-loading="listLoading"
+        :data="listClass"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%;"
+        @current-change="handleCurrentClassChange"
+      >
 
-      <el-table-column label="课号" prop="kh" align="center" width="150px">
-        <template slot-scope="{row}">
-          <span>{{ row.kh }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="课名" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.km }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="教师号" min-width="80px">
-        <template slot-scope="{row}">
-          <span>{{ row.gh }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="上课时间" width="80px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.sksj }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="选课人数" width="150px">
-        <template slot-scope="{row}">
-          <span>{{ row.rs }}</span>
-        </template>
-      </el-table-column>
+        <el-table-column label="课号" prop="kh" align="center" width="150px">
+          <template slot-scope="{row}">
+            <span>{{ row.kh }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="课名" width="150px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.km }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="教师号" min-width="80px">
+          <template slot-scope="{row}">
+            <span>{{ row.gh }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="上课时间" width="80px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.sksj }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="选课人数" width="150px">
+          <template slot-scope="{row}">
+            <span>{{ row.rs }}</span>
+          </template>
+        </el-table-column>
       <!--      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">-->
       <!--        <template slot-scope="{row,$index}">-->
       <!--          <el-button type="primary" size="mini" @click="handleUpdate(row)">-->
@@ -129,63 +129,69 @@
       <!--          </el-button>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-    </el-table>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreateClass">
-      添加
-    </el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleStudent">
-      查看
-    </el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleClassDelete">
-      删除
-    </el-button>
-    <pagination v-show="total>0" :total="total" :page.sync="listQueryClass.page" :limit.sync="listQueryClass.limit" @pagination="getClass" />
-  </div>
-    <p></p>
-<div v-if="studentStatus">
-    <div class="filter-container">
-
-      <el-input v-model="listQueryStudent.xh" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilterStudent" />
-
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilterStudent">
-        查询
+      </el-table>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreateClass">
+        添加
       </el-button>
-
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-download" @click="handleClearStudent">
-        清空
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleStudent">
+        查看
       </el-button>
-
-    </div>
-
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="listStudent"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-      @current-change="handleCurrentStudentChange">
-
-      <el-table-column label="学号" prop="xh" align="center" width="150px">
-        <template slot-scope="{row}">
-          <span>{{ row.xh }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="姓名" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.xm }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreateStudent">
-      添加
-    </el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleStudentDelete">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleClassDelete">
         删除
-    </el-button>
-    <pagination v-show="total>0" :total="total" :page.sync="listQueryStudent.page" :limit.sync="listQueryStudent.limit" @pagination="getStudent" />
-</div>
+      </el-button>
+      <pagination v-show="total>0" :total="total" :page.sync="listQueryClass.page" :limit.sync="listQueryClass.limit" @pagination="getClass" />
+    </div>
+    <p />
+    <div v-if="studentStatus">
+      <div class="filter-container">
+
+        <el-input v-model="listQueryStudent.xh" placeholder="学号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilterStudent" />
+
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilterStudent">
+          查询
+        </el-button>
+
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-download" @click="handleClearStudent">
+          清空
+        </el-button>
+
+      </div>
+
+      <el-table
+        :key="tableKey"
+        v-loading="listLoading"
+        :data="listStudent"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%;"
+        @current-change="handleCurrentStudentChange"
+      >
+
+        <el-table-column label="学号" prop="xh" align="center" width="150px">
+          <template slot-scope="{row}">
+            <span>{{ row.xh }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="姓名" width="150px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.xm }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="院系" width="150px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.yx }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreateStudent">
+        添加
+      </el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleStudentDelete">
+        删除
+      </el-button>
+      <pagination v-show="total>0" :total="total" :page.sync="listQueryStudent.page" :limit.sync="listQueryStudent.limit" @pagination="getStudent" />
+    </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="课号" prop="kh">
@@ -205,17 +211,17 @@
         <el-form-item label="学时" prop="xs">
           <el-input v-model="temp.xs" />
         </el-form-item>
-<!--        <el-form-item label="Status">-->
-<!--          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">-->
-<!--            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="Imp">-->
-<!--          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="Remark">-->
-<!--          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="Status">-->
+        <!--          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">-->
+        <!--            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="Imp">-->
+        <!--          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="Remark">-->
+        <!--          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />-->
+        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -233,7 +239,7 @@
           <el-input v-model="tempClass.gh" />
         </el-form-item>
         <el-form-item label="上课时间" prop="sksj">
-          <el-input v-model="tempClass.sksj" placeholder="例：三1-2"/>
+          <el-input v-model="tempClass.sksj" placeholder="例：三1-2" />
         </el-form-item>
         <!--        <el-form-item label="Status">-->
         <!--          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">-->
@@ -369,7 +375,6 @@ export default {
         create: '添加课程',
         class: '添加班级'
       },
-      //dialogPvVisible: false,
       rules: {
         kh: [{ required: true, message: '请填写课号', trigger: 'blur' }],
         km: [{ required: true, message: '请填写课名', trigger: 'blur' }],
@@ -468,10 +473,12 @@ export default {
       }
     },
     handleCurrentChange(val) {
+      this.classStatus = false
       this.currentRow = val
     },
 
     handleCurrentClassChange(val) {
+      this.studentStatus = false
       this.currentClass = val
     },
     handleCurrentStudentChange(val) {

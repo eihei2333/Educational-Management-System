@@ -23,7 +23,6 @@
       highlight-current-row
       style="width: 100%;"
       @current-change="handleCurrentTeacherChange">
-
       <el-table-column label="工号" prop="gh" align="center" width="150px">
         <template slot-scope="{row}">
           <span>{{ row.gh }}</span>
@@ -32,6 +31,11 @@
       <el-table-column label="姓名" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.xm }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="院系" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.yx }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -50,6 +54,9 @@
         </el-form-item>
         <el-form-item label="姓名" prop="xm">
           <el-input v-model="tempTeacher.xm" />
+        </el-form-item>
+        <el-form-item label="院系号" prop="yxh">
+          <el-input v-model="tempTeacher.yxh" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -104,11 +111,13 @@ export default {
       listQueryTeacher: {
         page: 1,
         limit: 20,
-        gk: undefined,
+        gh: undefined,
         xm: undefined
       },
       tempTeacher: {
-        gh: undefined
+        gh: undefined,
+        xm: undefined,
+        yxh: undefined
       },
 
       dialogTeacherFormVisible: false,
@@ -118,12 +127,13 @@ export default {
       },
       rulesTeacher: {
         gh: [{ required: true, message: '请填写工号', trigger: 'blur' }],
-        xm: [{ required: true, message: '请填写姓名', trigger: 'blur' }]
+        xm: [{ required: true, message: '请填写姓名', trigger: 'blur' }],
+        yxh: [{ required: true, message: '请填写院系号', trigger: 'blur' }]
       }
     }
   },
   created() {
-    this.getList()
+    this.getTeacher()
   },
   methods: {
     createTeacher() {
@@ -167,19 +177,6 @@ export default {
       this.tempClass = {
         xh: undefined
       }
-    },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    handleCreateClass() {
-      this.resetTempClass()
-      this.dialogStatus = 'class'
-      this.dialogClassFormVisible = true
     },
     handleCreateTeacher() {
       this.resetTempTeacher()

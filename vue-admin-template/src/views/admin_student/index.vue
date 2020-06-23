@@ -23,7 +23,6 @@
       highlight-current-row
       style="width: 100%;"
       @current-change="handleCurrentStudentChange">
-
       <el-table-column label="学号" prop="xh" align="center" width="150px">
         <template slot-scope="{row}">
           <span>{{ row.xh }}</span>
@@ -32,6 +31,11 @@
       <el-table-column label="姓名" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.xm }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="院系" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.yx }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -50,6 +54,9 @@
         </el-form-item>
         <el-form-item label="姓名" prop="xm">
           <el-input v-model="tempStudent.xm" />
+        </el-form-item>
+        <el-form-item label="院系号" prop="yxh">
+          <el-input v-model="tempStudent.yxh" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -104,144 +111,48 @@ export default {
     return {
       currentStudent: null,
       tableKey: 0,
-      list: null,
-      listClass: null,
       listStudent: null,
-      classList: null,
       studentList: null,
       total: 0,
       listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        kh: undefined,
-        km: undefined,
-        xq: undefined
-      },
-      listQueryClass: {
-        page: 1,
-        limit: 20,
-        kh: undefined,
-        gh: undefined,
-        xq: undefined
-      },
       listQueryStudent: {
         page: 1,
         limit: 20,
-        xk: undefined,
+        xh: undefined,
         xm: undefined
       },
 
       terms,
-      temp: {
-        kh: undefined,
-        km: undefined,
-        xq: undefined,
-        xf: 0,
-        xs: 0
-      },
-      tempClass: {
-        gh: undefined,
-        sksj: undefined
-      },
+
       tempStudent: {
-        xh: undefined
+        xh: undefined,
+        xm: undefined,
+        yxh: undefined
       },
-      dialogFormVisible: false,
-      dialogClassFormVisible: false,
       dialogStudentFormVisible: false,
       dialogStatus: '',
       textMap: {
-        student: '添加学生',
-        create: '添加课程',
-        class: '添加班级'
-      },
-      //dialogPvVisible: false,
-      rules: {
-        kh: [{ required: true, message: '请填写课号', trigger: 'blur' }],
-        km: [{ required: true, message: '请填写课名', trigger: 'blur' }],
-        xf: [{ required: true, message: '请填写学分', trigger: 'blur' }],
-        xs: [{ required: true, message: '请填写学时', trigger: 'blur' }],
-        xq: [{ required: true, message: '请填写学期', trigger: 'blur' }]
-      },
-      rulesClass: {
-        gh: [{ required: true, message: '请填写工号', trigger: 'blur' }],
-        sksj: [{ required: true, message: '请填写上课时间', trigger: 'blur' }]
+        student: '添加学生'
       },
       rulesStudent: {
         xh: [{ required: true, message: '请填写学号', trigger: 'blur' }],
         xm: [{ required: true, message: '请填写姓名', trigger: 'blur' }],
-      },
-      classStatus: false,
-      studentStatus: false
+        yxh: [{ required: true, message: '请填写院系号', trigger: 'blur' }]
+      }
     }
   },
   created() {
-    this.getList()
+    this.getStudent()
   },
   methods: {
-    createCourse() {
-
-    },
-    updateCourse() {
-
-    },
-    createClass() {
-
-    },
-    updateClass() {
-
-    },
     createStudent() {
 
     },
     updateStudent() {
 
     },
-    getList() {
-      // this.listLoading = true
-      // fetchList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.total = response.data.total
-      //
-      //   // Just to simulate the time of the request
-      //   setTimeout(() => {
-      //     this.listLoading = false
-      //   }, 1.5 * 1000)
-      // })
-    },
-    getClass() {
-
-    },
     getStudent() {
 
-    },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
-    },
-    handleClear() {
-      this.listQuery = {
-        page: 1,
-        limit: 20,
-        kh: undefined,
-        km: undefined,
-        xq: undefined
-      }
-    },
-
-    handleFilterClass() {
-      this.listQueryClass.page = 1
-      this.getClass()
-    },
-    handleClearClass() {
-      this.listQueryClass = {
-        page: 1,
-        limit: 20,
-        kh: undefined,
-        km: undefined,
-        xq: undefined
-      }
     },
     handleFilterStudent() {
       this.listQueryStudent.page = 1
@@ -255,60 +166,19 @@ export default {
         xm: undefined
       }
     },
-    handleCurrentChange(val) {
-      this.currentRow = val
-    },
-
-    handleCurrentClassChange(val) {
-      this.currentClass = val
-    },
     handleCurrentStudentChange(val) {
       this.currentStudent = val
     },
 
-    resetTemp() {
-      this.temp = {
-        kh: undefined,
-        km: undefined,
-        xq: undefined,
-        xf: 0,
-        xs: 0
-      }
-    },
-    resetTempClass() {
-      this.tempClass = {
-        gh: undefined,
-        sksj: undefined
-      }
-    },
     resetTempStudent() {
       this.tempClass = {
         xh: undefined
       }
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    handleCreateClass() {
-      this.resetTempClass()
-      this.dialogStatus = 'class'
-      this.dialogClassFormVisible = true
-    },
     handleCreateStudent() {
       this.resetTempStudent()
       this.dialogStatus = 'student'
       this.dialogStudentFormVisible = true
-    },
-    handleClass() {
-      this.classStatus = true
-    },
-    handleStudent() {
-      this.studentStatus = true
     },
     // handleUpdate(row) {
     //   this.temp = Object.assign({}, row) // copy obj
@@ -338,25 +208,6 @@ export default {
     //     }
     //   })
     // },
-    handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
-      })
-      this.list.splice(index, 1)
-    },
-
-    handleClassDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
-      })
-      this.list.splice(index, 1)
-    },
 
     handleStudentDelete(row, index) {
       this.$notify({
