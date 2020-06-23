@@ -23,7 +23,8 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @current-change="handleCurrentChange">
+      @current-change="handleCurrentChange"
+    >
       <el-table-column label="课号" prop="kh" align="center" width="150px">
         <template slot-scope="{row}">
           <span>{{ row.kh }}</span>
