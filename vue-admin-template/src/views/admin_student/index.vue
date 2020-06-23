@@ -48,7 +48,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQueryStudent.page" :limit.sync="listQueryStudent.limit" @pagination="getStudent" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogStudentFormVisible">
-      <el-form ref="dataForm" :rules="rulesStudent" :model="tempStudent" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="StudentForm" :rules="rulesStudent" :model="tempStudent" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="学号" prop="xh">
           <el-input v-model="tempStudent.xh" />
         </el-form-item>
@@ -146,10 +146,22 @@ export default {
   },
   methods: {
     createStudent() {
-
-    },
-    updateStudent() {
-
+      this.$refs['StudentForm'].validate((valid) => {
+        if (valid) {
+          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          // this.temp.author = 'vue-element-admin'
+          // createArticle(this.temp).then(() => {
+          //   this.list.unshift(this.temp)
+          //   this.dialogFormVisible = false
+          //   this.$notify({
+          //     title: 'Success',
+          //     message: 'Created Successfully',
+          //     type: 'success',
+          //     duration: 2000
+          //   })
+          // })
+        }
+      })
     },
     getStudent() {
 

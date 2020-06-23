@@ -48,7 +48,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQueryTeacher.page" :limit.sync="listQueryTeacher.limit" @pagination="getTeacher" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogTeacherFormVisible">
-      <el-form ref="dataForm" :rules="rulesTeacher" :model="tempTeacher" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="TeacherForm" :rules="rulesTeacher" :model="tempTeacher" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="工号" prop="gh">
           <el-input v-model="tempTeacher.gh" />
         </el-form-item>
@@ -63,7 +63,7 @@
         <el-button @click="dialogTeacherFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='teacher'?createTeacher():updateTeacher()">
+        <el-button type="primary" @click="createTeacher()">
           确认
         </el-button>
       </div>
@@ -137,10 +137,22 @@ export default {
   },
   methods: {
     createTeacher() {
-
-    },
-    updateTeacher() {
-
+      this.$refs['TeacherForm'].validate((valid) => {
+        if (valid) {
+          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          // this.temp.author = 'vue-element-admin'
+          // createArticle(this.temp).then(() => {
+          //   this.list.unshift(this.temp)
+          //   this.dialogFormVisible = false
+          //   this.$notify({
+          //     title: 'Success',
+          //     message: 'Created Successfully',
+          //     type: 'success',
+          //     duration: 2000
+          //   })
+          // })
+        }
+      })
     },
     getList() {
       // this.listLoading = true

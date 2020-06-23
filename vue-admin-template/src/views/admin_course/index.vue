@@ -34,7 +34,7 @@
           <span>{{ row.km }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学分" min-width="80px">
+      <el-table-column label="学分" width="80px">
         <template slot-scope="{row}">
           <span>{{ row.xf }}</span>
         </template>
@@ -44,7 +44,7 @@
           <span>{{ row.xs }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="开设院系" width="150px">
+      <el-table-column label="开设院系" width="80px">
         <template slot-scope="{row}">
           <span>{{ row.mc }}</span>
         </template>
@@ -193,7 +193,7 @@
       <pagination v-show="total>0" :total="total" :page.sync="listQueryStudent.page" :limit.sync="listQueryStudent.limit" @pagination="getStudent" />
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="CourseForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="课号" prop="kh">
           <el-input v-model="temp.kh" />
         </el-form-item>
@@ -211,60 +211,38 @@
         <el-form-item label="学时" prop="xs">
           <el-input v-model="temp.xs" />
         </el-form-item>
-        <!--        <el-form-item label="Status">-->
-        <!--          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">-->
-        <!--            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="Imp">-->
-        <!--          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="Remark">-->
-        <!--          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />-->
-        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createCourse():updateCourse()">
+        <el-button type="primary" @click="createCourse()">
           确认
         </el-button>
       </div>
     </el-dialog>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogClassFormVisible">
-      <el-form ref="dataForm" :rules="rulesClass" :model="tempClass" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+      <el-form ref="ClassForm" :rules="rulesClass" :model="tempClass" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
         <el-form-item label="工号" prop="gh">
           <el-input v-model="tempClass.gh" />
         </el-form-item>
         <el-form-item label="上课时间" prop="sksj">
           <el-input v-model="tempClass.sksj" placeholder="例：三1-2" />
         </el-form-item>
-        <!--        <el-form-item label="Status">-->
-        <!--          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">-->
-        <!--            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="Imp">-->
-        <!--          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="Remark">-->
-        <!--          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />-->
-        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogClassFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='class'?createClass():updateClass()">
+        <el-button type="primary" @click="createClass()">
           确认
         </el-button>
       </div>
     </el-dialog>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogStudentFormVisible">
-      <el-form ref="dataForm" :rules="rulesStudent" :model="tempStudent" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="StudentForm" :rules="rulesStudent" :model="tempStudent" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="学号" prop="xh">
           <el-input v-model="tempStudent.xh" />
         </el-form-item>
@@ -273,7 +251,7 @@
         <el-button @click="dialogStudentFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='class'?createStudent():updateStudent()">
+        <el-button type="primary" @click="createStudent()">
           确认
         </el-button>
       </div>
@@ -356,8 +334,8 @@ export default {
         kh: undefined,
         km: undefined,
         xq: undefined,
-        xf: 0,
-        xs: 0
+        xf: undefined,
+        xs: undefined
       },
       tempClass: {
         gh: undefined,
@@ -398,22 +376,60 @@ export default {
   },
   methods: {
     createCourse() {
-
+      this.$refs['CourseForm'].validate((valid) => {
+        if (valid) {
+          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          // this.temp.author = 'vue-element-admin'
+          // createArticle(this.temp).then(() => {
+          //   this.list.unshift(this.temp)
+          //   this.dialogFormVisible = false
+          //   this.$notify({
+          //     title: 'Success',
+          //     message: 'Created Successfully',
+          //     type: 'success',
+          //     duration: 2000
+          //   })
+          // })
+        }
+      })
     },
-    updateCourse() {
 
-    },
     createClass() {
-
+      this.$refs['ClassForm'].validate((valid) => {
+        if (valid) {
+          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          // this.temp.author = 'vue-element-admin'
+          // createArticle(this.temp).then(() => {
+          //   this.list.unshift(this.temp)
+          //   this.dialogFormVisible = false
+          //   this.$notify({
+          //     title: 'Success',
+          //     message: 'Created Successfully',
+          //     type: 'success',
+          //     duration: 2000
+          //   })
+          // })
+        }
+      })
     },
-    updateClass() {
 
-    },
     createStudent() {
-
-    },
-    updateStudent() {
-
+      this.$refs['StudentForm'].validate((valid) => {
+        if (valid) {
+          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          // this.temp.author = 'vue-element-admin'
+          // createArticle(this.temp).then(() => {
+          //   this.list.unshift(this.temp)
+          //   this.dialogFormVisible = false
+          //   this.$notify({
+          //     title: 'Success',
+          //     message: 'Created Successfully',
+          //     type: 'success',
+          //     duration: 2000
+          //   })
+          // })
+        }
+      })
     },
     getList() {
       // this.listLoading = true
