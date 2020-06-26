@@ -98,7 +98,7 @@ export default {
         kh: undefined,
         km: undefined,
         gh: undefined
-      },
+      }
     }
   },
   created() {

@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form ref="TermForm" :model="currentPass" label-width="200px" :rules="rules">
-      <el-form-item label="设置新密码" prop="term">
-        <el-input v-model="currentPass.pass" placeholder="请输入新密码" style="width: 200px;" prop="xf"/>
+    <el-form ref="PassForm" :model="currentPass" :rules="rulesPass" label-width="200px">
+      <el-form-item label="设置新密码" prop="pass">
+        <el-input v-model="currentPass.pass" placeholder="请输入新密码" style="width: 200px" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmitTerm()">确定</el-button>
+        <el-button type="primary" @click="onSubmitPass()">确定</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -18,14 +18,14 @@ export default {
       currentPass: {
         pass: undefined
       },
-      rules: {
-        term: [{ required: true, message: '请填写学期', trigger: 'blur' }]
+      rulesPass: {
+        pass: [{ required: true, message: '请填写密码', trigger: 'blur' }]
       }
     }
   },
   methods: {
-    onSubmitTerm() {
-      this.$refs['TermForm'].validate((valid) => {
+    onSubmitPass() {
+      this.$refs['PassForm'].validate((valid) => {
         if (valid) {
           this.$message('submit!')
           // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
@@ -48,10 +48,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.line{
-  text-align: center;
-}
-</style>
-
