@@ -14,15 +14,15 @@
     <el-form ref="CreditForm" :model="creditSetting" label-width="200px" :rules="rules">
       <el-form-item label="选择院系学分上限" required>
         <el-col :span="5">
-          <el-form-item prop="yx">
+          <el-form-item prop="yxh">
             <el-select v-model="creditSetting.yxh" placeholder="请选择院系">
               <el-option v-for="item in DepartmentList" :key="item.yxh" :label="item.display_name" :value="item.yxh" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="11">
-          <el-form-item prop="xf">
-            <el-input v-model="creditSetting.credit" placeholder="请输入学分上限" style="width: 200px;" prop="xf"/>
+          <el-form-item prop="credit">
+            <el-input v-model="creditSetting.credit" placeholder="请输入学分上限" style="width: 200px;" prop="xf" />
           </el-form-item>
         </el-col>
       </el-form-item>
@@ -63,8 +63,8 @@ export default {
 
       rules: {
         term: [{ required: true, message: '请填写学期', trigger: 'blur' }],
-        yx: [{ required: true, message: '请填写院系', trigger: 'blur' }],
-        xf: [{ required: true, message: '请填写学分上限', trigger: 'blur' }]
+        yxh: [{ required: true, message: '请填写院系', trigger: 'blur' }],
+        credit: [{ required: true, message: '请填写学分上限', trigger: 'blur' }]
       }
     }
   },
@@ -114,10 +114,4 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.line{
-  text-align: center;
-}
-</style>
 
