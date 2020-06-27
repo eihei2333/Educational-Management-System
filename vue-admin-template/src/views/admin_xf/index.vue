@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
-    <el-form ref="currentTerm" :model="currentTerm" label-width="200px" :rules="rules">
+    <el-form ref="creditSetting" :model="creditSetting" label-width="200px" :rules="rules">
       <el-form-item label="设置当前学期" prop="term">
-        <el-select v-model="currentTerm.term" placeholder="请选择当前学期">
+        <el-select v-model="creditSetting.term" placeholder="请选择当前学期">
           <el-option v-for="item in terms" :key="item" :label="item" :value="item" />
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmitTerm()">确定</el-button>
-      </el-form-item>
-    </el-form>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" @click="onSubmitTerm()">确定</el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
 
-    <el-form ref="creditSetting" :model="creditSetting" label-width="200px" :rules="rules">
+<!--    <el-form ref="creditSetting" :model="creditSetting" label-width="200px" :rules="rules">-->
       <el-form-item label="选择院系学分上限" required>
         <el-col :span="5">
           <el-form-item prop="yxh">
@@ -22,7 +22,7 @@
         </el-col>
         <el-col :span="11">
           <el-form-item prop="credit">
-            <el-input v-model="creditSetting.credit" placeholder="请输入学分上限" style="width: 200px;" prop="xf" />
+            <el-input v-model="creditSetting.credit" placeholder="请输入学分上限" style="width: 200px;" prop="xf"/>
           </el-form-item>
         </el-col>
       </el-form-item>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+
 const terms = [
   "{ key: 'CN', display_name: 'China' }",
   "{ key: 'US', display_name: 'USA' }",
@@ -56,6 +57,7 @@ export default {
         term: undefined
       },
       creditSetting: {
+        term: '',
         yxh: '',
         credit: ''
       },
@@ -68,50 +70,48 @@ export default {
       }
     }
   },
+  created: function() {
+    this.$store.dispatch('user/getTerm').then(response => {
+      this.terms = response.terms
+      this.$store.dispatch('user/getCollege').then(response => {
+        this.DepartmentList = response.college
+      }).catch(() => {
+      })
+    }).catch(() => {
+    })
+  },
   methods: {
     onSubmitTerm() {
-      this.$refs['currentTerm'].validate((valid) => {
+      this.$refs['creditSetting'].validate((valid) => {
         if (valid) {
-          this.$message('submit!')
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          this.$message(this.creditSetting.term)
+          console.log(this.creditSetting.term)
         } else {
           this.$message('cnm')
+          console.log(this.creditSetting.term)
         }
       })
     },
     onSubmitCredit() {
-      this.$refs['creditSetting'].validate((valid) => {
+      this.$refs.creditSetting.validate((valid) => {
         if (valid) {
-          this.$message('submit!')
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          this.$store.dispatch('admin/setSx', this.creditSetting).then(res => {
+            this.$message(res)
+          }).catch(() => {
+            this.loading = false
+          })
         } else {
-          // this.$message(this.CreditSetting)
+          this.$message('valid!')
         }
       })
     }
   }
 }
 </script>
+
+<style scoped>
+.line{
+  text-align: center;
+}
+</style>
 

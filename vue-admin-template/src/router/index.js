@@ -51,9 +51,9 @@ export const constantRoutes = [
       path: 'personalInfo',
       name: '个人信息',
       component: () => import('@/views/personalInfo/index'),
-      meta: { title: 'personalInfo', icon: 'dashboard' }
+      meta: { title: '个人信息管理', icon: 'dashboard' }
     }]
-  },
+  }
 
   // {
   //   path: '/',
@@ -89,18 +89,18 @@ export const constantRoutes = [
   //   ]
   // },
   //
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  }
+  // {
+  //   path: '/form',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Form',
+  //       component: () => import('@/views/form/index'),
+  //       meta: { title: 'Form', icon: 'form' }
+  //     }
+  //   ]
+  // }
   //
   // {
   //   path: '/form',
@@ -191,9 +191,9 @@ export const studentRoutes = [
     children: [
       {
         path: 'index',
-        name: 'student_class_choose',
+        name: '选课',
         component: () => import('@/views/student_class_choose/index'),
-        meta: { title: 'student_class_choose', icon: 'form' }
+        meta: { title: '选课', icon: 'form' }
       }
     ]
   },
@@ -205,22 +205,22 @@ export const studentRoutes = [
         path: 'index',
         name: 'student_class_delet',
         component: () => import('@/views/student_class_delet/index'),
-        meta: { title: 'student_class_delet', icon: 'form' }
+        meta: { title: '退课', icon: 'form' }
       }
     ]
   },
-  {
-    path: '/student_class_view',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'student_class_view',
-        component: () => import('@/views/student_class_view/index'),
-        meta: { title: 'student_class_view', icon: 'form' }
-      }
-    ]
-  },
+  // {
+  //   path: '/student_class_view',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'student_class_view',
+  //       component: () => import('@/views/student_class_view/index'),
+  //       meta: { title: 'student_class_view', icon: 'form' }
+  //     }
+  //   ]
+  // },
   {
     path: '/student_score',
     component: Layout,
@@ -229,7 +229,7 @@ export const studentRoutes = [
         path: 'index',
         name: 'student_score',
         component: () => import('@/views/student_score/index'),
-        meta: { title: 'student_score', icon: 'form' }
+        meta: { title: '成绩查询', icon: 'form' }
       }
     ]
   },
@@ -240,7 +240,7 @@ export const studentRoutes = [
     children: [
       {
         path: 'https://github.com/2019ZSS/Educational-Management-System-/',
-        meta: { title: 'External Link', icon: 'link' }
+        meta: { title: '更多', icon: 'link' }
       }
     ]
   },
@@ -257,7 +257,7 @@ export const teacherRoutes = [
         path: 'index',
         name: 'teacher_class',
         component: () => import('@/views/teacher_class/index'),
-        meta: { title: 'teacher_class', icon: 'form' }
+        meta: { title: '课程管理', icon: 'form' }
       }
     ]
   },
@@ -267,7 +267,7 @@ export const teacherRoutes = [
     children: [
       {
         path: 'https://github.com/2019ZSS/Educational-Management-System-/',
-        meta: { title: 'External Link', icon: 'link' }
+        meta: { title: '更多', icon: 'link' }
       }
     ]
   },
@@ -284,7 +284,7 @@ export const adminRoutes = [
         path: 'index',
         name: 'admin_xf',
         component: () => import('@/views/admin_xf/index'),
-        meta: { title: 'admin_xf', icon: 'form' }
+        meta: { title: '学分上限设置', icon: 'form' }
       }
     ]
   },
@@ -296,7 +296,7 @@ export const adminRoutes = [
         path: 'index',
         name: 'admin_course',
         component: () => import('@/views/admin_course/index'),
-        meta: { title: 'admin_course', icon: 'form' }
+        meta: { title: '课程管理', icon: 'form' }
       }
     ]
   },
@@ -308,7 +308,7 @@ export const adminRoutes = [
         path: 'index',
         name: 'admin_student',
         component: () => import('@/views/admin_student/index'),
-        meta: { title: 'admin_student', icon: 'form' }
+        meta: { title: '学生管理', icon: 'form' }
       }
     ]
   },
@@ -320,7 +320,7 @@ export const adminRoutes = [
         path: 'index',
         name: 'admin_teacher',
         component: () => import('@/views/admin_teacher/index'),
-        meta: { title: 'admin_teacher', icon: 'form' }
+        meta: { title: '教师管理', icon: 'form' }
       }
     ]
   },
@@ -331,7 +331,7 @@ export const adminRoutes = [
     children: [
       {
         path: 'https://github.com/2019ZSS/Educational-Management-System-/',
-        meta: { title: 'External Link', icon: 'link' }
+        meta: { title: '更多', icon: 'link' }
       }
     ]
   },

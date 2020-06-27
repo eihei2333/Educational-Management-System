@@ -127,7 +127,7 @@
         <el-button @click="dialogClassFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="createClass()">
+        <el-button type="primary" @click="handleUpdate1">
           确认
         </el-button>
       </div>
@@ -182,14 +182,12 @@ export default {
         xq: undefined
       },
       chartData: {
-        columns: ['日期', '访问用户'],
+        columns: ['分段', '人数'],
         rows: [
-          { '日期': '1/1', '访问用户': 1393 },
-          { '日期': '1/2', '访问用户': 3530 },
-          { '日期': '1/3', '访问用户': 2923 },
-          { '日期': '1/4', '访问用户': 1723 },
-          { '日期': '1/5', '访问用户': 3792 },
-          { '日期': '1/6', '访问用户': 4593 }
+          { '分段': '优', '人数': 0 },
+          { '分段': '良', '人数': 0 },
+          { '分段': '及格', '人数': 0 },
+          { '分段': '失败', '人数': 0 }
         ]
       },
       currentTerm: {
@@ -230,29 +228,29 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.$store.dispatch('user/getTerm').then(response => {
+      console.log('terms', response)
+      this.terms = response.terms
+      this.getList()
+    }).catch(() => {
+    })
   },
   methods: {
     handleUpdate(row) {
       this.dialogClassFormVisible = true
+      this.currentRow = row
     },
     onSubmitTerm() {
       this.$refs['TermForm'].validate((valid) => {
         if (valid) {
           this.classStatus = true
-          this.$message('submit!')
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          const data = { xq: this.currentTerm.term }
+          this.$store.dispatch('teacher/getClass', data).then(response => {
+            console.log('terms', response)
+            this.listClass = response
+            this.listLoading = false
+          }).catch(() => {
+          })
         } else {
           this.$message('cnm')
         }
@@ -294,6 +292,14 @@ export default {
         xh: undefined
       }
     },
+    handleUpdate1() {
+      const data = { xq: this.currentTerm.term, xh: this.currentRow.xh, kh: this.currentClass.kh, pscj: this.tempClass.pscj, kscj: this.tempClass.kscj }
+      this.$store.dispatch('teacher/updateScore', data).then(response => {
+        console.log('handleStudent', response)
+        this.$message(response)
+      }).catch(() => {
+      })
+    },
     handleFilterStudent() {
       this.listQueryStudent.page = 1
       this.getStudent()
@@ -302,7 +308,14 @@ export default {
       this.classStatus = true
     },
     handleStudent() {
-      this.studentStatus = true
+      const data = { xq: this.currentTerm.term, xh: this.listQueryStudent.xh, kh: this.currentClass.kh }
+      this.$store.dispatch('teacher/getStudent', data).then(response => {
+        console.log('handleStudent', response)
+        this.listStudent = response.list
+        this.chartData.rows = response.rows
+        this.studentStatus = true
+      }).catch(() => {
+      })
     }
   }
 }

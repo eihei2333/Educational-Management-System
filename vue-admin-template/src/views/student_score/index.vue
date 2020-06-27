@@ -48,7 +48,7 @@
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
-    <ve-line :data="chartData" :extend="extend"></ve-line>
+    <ve-bar v-if="chartStatus" :data="chartData" :extend="extend"></ve-bar>
   </div>
 
 </template>
@@ -57,17 +57,22 @@
 // import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import VeLine from 'v-charts/lib/line'
+import VeBar from 'v-charts/lib/bar'
 
 // arr to obj, such as { CN : "China", US : "USA" }
 // const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 //   acc[cur.key] = cur.display_name
 //   return acc
 // }, {})
-
+const terms = [
+  "{ key: 'CN', display_name: 'China' }",
+  "{ key: 'US', display_name: 'USA' }",
+  "{ key: 'JP', display_name: 'Japan' }",
+  "{ key: 'EU', display_name: 'Eurozone' }"
+]
 export default {
   name: 'ComplexTable',
-  components: { Pagination, VeLine },
+  components: { Pagination, VeBar },
   directives: { waves },
   filters: {
     // statusFilter(status) {
@@ -97,10 +102,12 @@ export default {
       currentTerm: {
         term: undefined
       },
+      terms,
       tableKey: 0,
       list: null,
       total: 0,
       listLoading: true,
+      chartStatus: false,
       listQuery: {
         page: 1,
         limit: 20,
@@ -109,20 +116,25 @@ export default {
         gh: undefined
       },
       chartData: {
-        columns: ['日期', '访问用户', '下单用户', '下单率'],
+        columns: ['课名', '平时成绩', '考试成绩', '总评成绩'],
         rows: [
-          { '日期': '1/1', '访问用户': 1393, '下单用户': 1093, '下单率': 0.32 },
-          { '日期': '1/2', '访问用户': 3530, '下单用户': 3230, '下单率': 0.26 },
-          { '日期': '1/3', '访问用户': 2923, '下单用户': 2623, '下单率': 0.76 },
-          { '日期': '1/4', '访问用户': 1723, '下单用户': 1423, '下单率': 0.49 },
-          { '日期': '1/5', '访问用户': 3792, '下单用户': 3492, '下单率': 0.323 },
-          { '日期': '1/6', '访问用户': 4593, '下单用户': 4293, '下单率': 0.78 }
+          { '课名': '1/1', '平时成绩': 1393, '考试成绩': 1093, '总评成绩': 0.32 },
+          { '课名': '1/2', '平时成绩': 3530, '考试成绩': 3230, '总评成绩': 0.26 },
+          { '课名': '1/3', '平时成绩': 2923, '考试成绩': 2623, '总评成绩': 0.76 },
+          { '课名': '1/4', '平时成绩': 1723, '考试成绩': 1423, '总评成绩': 0.49 },
+          { '课名': '1/5', '平时成绩': 3792, '考试成绩': 3492, '总评成绩': 0.323 },
+          { '课名': '1/6', '平时成绩': 4593, '考试成绩': 4293, '总评成绩': 0.78 }
         ]
       }
     }
   },
   created() {
-    this.getList()
+    this.$store.dispatch('user/getTerm').then(response => {
+      console.log('terms', response)
+      this.terms = response.terms
+      this.getList()
+    }).catch(() => {
+    })
   },
   methods: {
     getList() {
@@ -138,7 +150,15 @@ export default {
       // })
     },
     onSubmitTerm() {
-
+      const data = { xq: this.currentTerm.term }
+      this.$store.dispatch('student/getScore', data).then(response => {
+        this.list = response.list
+        this.listLoading = false
+        this.chartData.rows = response.rows
+        console.log(response)
+        this.chartStatus = true
+      }).catch(() => {
+      })
     },
     handleCurrentChange(val) {
       this.classStatus = false

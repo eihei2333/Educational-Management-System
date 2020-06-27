@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
 
-      <el-input v-model="listQueryTeacher.xh" placeholder="工号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilterTeacher" />
+      <el-input v-model="listQueryTeacher.gh" placeholder="工号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilterTeacher" />
 
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilterTeacher">
         查询
@@ -139,18 +139,10 @@ export default {
     createTeacher() {
       this.$refs['TeacherForm'].validate((valid) => {
         if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          this.$store.dispatch('admin/creatTeacher', this.tempTeacher).then(response => {
+            this.$message(response)
+          }).catch(() => {
+          })
         }
       })
     },
@@ -167,7 +159,11 @@ export default {
       // })
     },
     getTeacher() {
-
+      this.$store.dispatch('admin/getAllTeacher', this.listQueryTeacher).then(response => {
+        this.listTeacher = response
+        this.listLoading = false
+      }).catch(() => {
+      })
     },
     handleFilterTeacher() {
       this.listQueryTeacher.page = 1
@@ -195,77 +191,14 @@ export default {
       this.dialogStatus = 'teacher'
       this.dialogTeacherFormVisible = true
     },
-    // handleUpdate(row) {
-    //   this.temp = Object.assign({}, row) // copy obj
-    //   this.temp.timestamp = new Date(this.temp.timestamp)
-    //   this.dialogStatus = 'update'
-    //   this.dialogFormVisible = true
-    //   this.$nextTick(() => {
-    //     this.$refs['dataForm'].clearValidate()
-    //   })
-    // },
-    // updateData() {
-    //   this.$refs['dataForm'].validate((valid) => {
-    //     if (valid) {
-    //       const tempData = Object.assign({}, this.temp)
-    //       tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-    //       updateArticle(tempData).then(() => {
-    //         const index = this.list.findIndex(v => v.id === this.temp.id)
-    //         this.list.splice(index, 1, this.temp)
-    //         this.dialogFormVisible = false
-    //         this.$notify({
-    //           title: 'Success',
-    //           message: 'Update Successfully',
-    //           type: 'success',
-    //           duration: 2000
-    //         })
-    //       })
-    //     }
-    //   })
-    // },
 
     handleTeacherDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      const data = { gh: this.currentTeacher.gh }
+      this.$store.dispatch('admin/deleteTeacher', data).then(response => {
+        this.$message(response)
+      }).catch(() => {
       })
-      this.list.splice(index, 1)
     }
-    // handleFetchPv(pv) {
-    //   fetchPv(pv).then(response => {
-    //     this.pvData = response.data.pvData
-    //     this.dialogPvVisible = true
-    //   })
-    // },
-    // handleDownload() {
-    //   this.downloadLoading = true
-    //   import('@/vendor/Export2Excel').then(excel => {
-    //     const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-    //     const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-    //     const data = this.formatJson(filterVal)
-    //     excel.export_json_to_excel({
-    //       header: tHeader,
-    //       data,
-    //       filename: 'table-list'
-    //     })
-    //     this.downloadLoading = false
-    //   })
-    // },
-    // formatJson(filterVal) {
-    //   return this.list.map(v => filterVal.map(j => {
-    //     if (j === 'timestamp') {
-    //       return parseTime(v[j])
-    //     } else {
-    //       return v[j]
-    //     }
-    //   }))
-    // }
-    // getSortClass: function(key) {
-    //   const sort = this.listQuery.sort
-    //   return sort === `+${key}` ? 'ascending' : 'descending'
-    // }
   }
 }
 </script>

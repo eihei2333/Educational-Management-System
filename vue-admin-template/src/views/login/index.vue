@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">课程管理系统</h3>
       </div>
 
       <el-form-item prop="identification">
@@ -98,27 +98,13 @@ export default {
       loginForm: {
         identification: '',
         username: '',
-        password: '111111'
+        password: ''
       },
       loginRules: {
         identification: [{ required: true, trigger: 'blur', validator: validateIdentification }],
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        username: [{ required: true, trigger: 'blur' }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
-      studentRoutes: [
-        {
-          path: 'external-link',
-          component: Layout,
-          children: [
-            {
-              path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-              meta: { title: 'External Link', icon: 'link' }
-            }
-          ]
-        },
-        // 404 page must be placed at the end !!!
-        { path: '*', redirect: '/404', hidden: true }
-      ],
       loading: false,
       passwordType: 'password',
       redirect: undefined
@@ -150,13 +136,9 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate((valid, item) => {
         if (valid) {
-          // 登录验证api
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             addRoutes(this.loginForm.identification)
-            // console.log(this.studentRoutes)
-            // console.log(router)
-            // router.addRoutes(this.studentRoutes)
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {

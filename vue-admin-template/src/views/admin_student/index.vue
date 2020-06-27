@@ -48,7 +48,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQueryStudent.page" :limit.sync="listQueryStudent.limit" @pagination="getStudent" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogStudentFormVisible">
-      <el-form ref="StudentForm" :rules="rulesStudent" :model="tempStudent" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="tempStudent" :rules="rulesStudent" :model="tempStudent" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="学号" prop="xh">
           <el-input v-model="tempStudent.xh" />
         </el-form-item>
@@ -146,25 +146,21 @@ export default {
   },
   methods: {
     createStudent() {
-      this.$refs['StudentForm'].validate((valid) => {
+      this.$refs['tempStudent'].validate((valid) => {
         if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          this.$store.dispatch('admin/creatStudent', this.tempStudent).then(response => {
+            this.$message(response)
+          }).catch(() => {
+          })
         }
       })
     },
     getStudent() {
-
+      this.$store.dispatch('admin/getAllStudent', this.listQueryStudent).then(response => {
+        this.listStudent = response
+        this.listLoading = false
+      }).catch(() => {
+      })
     },
     handleFilterStudent() {
       this.listQueryStudent.page = 1
@@ -222,47 +218,12 @@ export default {
     // },
 
     handleStudentDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      const data = { xh: this.currentStudent.xh }
+      this.$store.dispatch('admin/deleteStudent', data).then(response => {
+        this.$message(response)
+      }).catch(() => {
       })
-      this.list.splice(index, 1)
     }
-    // handleFetchPv(pv) {
-    //   fetchPv(pv).then(response => {
-    //     this.pvData = response.data.pvData
-    //     this.dialogPvVisible = true
-    //   })
-    // },
-    // handleDownload() {
-    //   this.downloadLoading = true
-    //   import('@/vendor/Export2Excel').then(excel => {
-    //     const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-    //     const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-    //     const data = this.formatJson(filterVal)
-    //     excel.export_json_to_excel({
-    //       header: tHeader,
-    //       data,
-    //       filename: 'table-list'
-    //     })
-    //     this.downloadLoading = false
-    //   })
-    // },
-    // formatJson(filterVal) {
-    //   return this.list.map(v => filterVal.map(j => {
-    //     if (j === 'timestamp') {
-    //       return parseTime(v[j])
-    //     } else {
-    //       return v[j]
-    //     }
-    //   }))
-    // }
-    // getSortClass: function(key) {
-    //   const sort = this.listQuery.sort
-    //   return sort === `+${key}` ? 'ascending' : 'descending'
-    // }
   }
 }
 </script>

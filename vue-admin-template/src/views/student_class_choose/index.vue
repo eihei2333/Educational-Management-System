@@ -2,7 +2,6 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.kh" placeholder="课号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.km" placeholder="课名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.gh" placeholder="教师号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
@@ -33,6 +32,16 @@
           <span>{{ row.km }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="教师号" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.gh }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="教师名" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.mz }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="学分" width="80px">
         <template slot-scope="{row}">
           <span>{{ row.xf }}</span>
@@ -41,6 +50,11 @@
       <el-table-column label="学时" width="80px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.xs }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="时间" width="80px">
+        <template slot-scope="{row}">
+          <span>{{ row.sj }}</span>
         </template>
       </el-table-column>
       <el-table-column label="选课人数" width="80px">
@@ -60,14 +74,20 @@
 // import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
+import { select } from '@/api/student' // secondary package based on el-pagination
 
 // arr to obj, such as { CN : "China", US : "USA" }
 // const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 //   acc[cur.key] = cur.display_name
 //   return acc
 // }, {})
-
+const terms = [
+  "{ key: 'CN', display_name: 'China' }",
+  "{ key: 'US', display_name: 'USA' }",
+  "{ key: 'JP', display_name: 'Japan' }",
+  "{ key: 'EU', display_name: 'Eurozone' }"
+]
 export default {
   name: 'ComplexTable',
   components: { Pagination },
@@ -98,24 +118,27 @@ export default {
         kh: undefined,
         km: undefined,
         gh: undefined
-      }
+      },
+      terms
     }
   },
   created() {
-    this.getList()
+    this.$store.dispatch('user/getTerm').then(response => {
+      console.log('terms', response)
+      this.terms = response.terms
+      this.getList()
+    }).catch(() => {
+    })
   },
   methods: {
     getList() {
-      // this.listLoading = true
-      // fetchList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.total = response.data.total
-      //
-      //   // Just to simulate the time of the request
-      //   setTimeout(() => {
-      //     this.listLoading = false
-      //   }, 1.5 * 1000)
-      // })
+      const data = { xq: this.terms[0], gh: this.listQuery.gh, kh: this.listQuery.kh }
+      this.$store.dispatch('student/getCourse', data).then(response => {
+        console.log('terms', response)
+        this.list = response
+        this.listLoading = false
+      }).catch(() => {
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -140,9 +163,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '选课成功!'
+        const data = { xq: this.terms[0], gh: this.currentRow.gh, kh: this.currentRow.kh }
+        this.$store.dispatch('student/select', data).then(response => {
+          console.log('terms', response)
+          this.$message(response)
+        }).catch(() => {
         })
       }).catch(() => {
         this.$message({

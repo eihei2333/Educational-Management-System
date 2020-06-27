@@ -20,6 +20,16 @@
           <span>{{ row.km }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="教师号" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.gh }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="教师名" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.mz }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="学分" width="80px">
         <template slot-scope="{row}">
           <span>{{ row.xf }}</span>
@@ -28,6 +38,11 @@
       <el-table-column label="学时" width="80px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.xs }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="时间" width="80px">
+        <template slot-scope="{row}">
+          <span>{{ row.sj }}</span>
         </template>
       </el-table-column>
       <el-table-column label="选课人数" width="80px">
@@ -54,7 +69,12 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 //   acc[cur.key] = cur.display_name
 //   return acc
 // }, {})
-
+const terms = [
+  "{ key: 'CN', display_name: 'China' }",
+  "{ key: 'US', display_name: 'USA' }",
+  "{ key: 'JP', display_name: 'Japan' }",
+  "{ key: 'EU', display_name: 'Eurozone' }"
+]
 export default {
   name: 'ComplexTable',
   components: { Pagination },
@@ -85,24 +105,27 @@ export default {
         kh: undefined,
         km: undefined,
         gh: undefined
-      }
+      },
+      terms
     }
   },
   created() {
-    this.getList()
+    this.$store.dispatch('user/getTerm').then(response => {
+      console.log('terms', response)
+      this.terms = response.terms
+      this.getList()
+    }).catch(() => {
+    })
   },
   methods: {
     getList() {
-      // this.listLoading = true
-      // fetchList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.total = response.data.total
-      //
-      //   // Just to simulate the time of the request
-      //   setTimeout(() => {
-      //     this.listLoading = false
-      //   }, 1.5 * 1000)
-      // })
+      const data = { xq: this.terms[0], gh: this.listQuery.gh, kh: this.listQuery.kh }
+      this.$store.dispatch('student/getSelectedCourse', data).then(response => {
+        console.log('terms', response)
+        this.list = response
+        this.listLoading = false
+      }).catch(() => {
+      })
     },
     handleCurrentChange(val) {
       this.classStatus = false
@@ -114,9 +137,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '退课成功!'
+        const data = { xq: this.terms[0], gh: this.currentRow.gh, kh: this.currentRow.kh }
+        this.$store.dispatch('student/delet', data).then(response => {
+          console.log('terms', response)
+          this.$message(response)
+        }).catch(() => {
         })
       }).catch(() => {
         this.$message({

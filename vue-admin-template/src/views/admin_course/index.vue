@@ -9,7 +9,9 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
-
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter1">
+        查询全部
+      </el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-download" @click="handleClear">
         清空
       </el-button>
@@ -99,7 +101,7 @@
             <span>{{ row.km }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="教师号" min-width="80px">
+        <el-table-column label="教师号" width="80px">
           <template slot-scope="{row}">
             <span>{{ row.gh }}</span>
           </template>
@@ -114,22 +116,6 @@
             <span>{{ row.rs }}</span>
           </template>
         </el-table-column>
-      <!--      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">-->
-      <!--        <template slot-scope="{row,$index}">-->
-      <!--          <el-button type="primary" size="mini" @click="handleUpdate(row)">-->
-      <!--            Edit-->
-      <!--          </el-button>-->
-      <!--          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">-->
-      <!--            Publish-->
-      <!--          </el-button>-->
-      <!--          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">-->
-      <!--            Draft-->
-      <!--          </el-button>-->
-      <!--          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">-->
-      <!--            Delete-->
-      <!--          </el-button>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
       </el-table>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreateClass">
         添加
@@ -211,6 +197,9 @@
         </el-form-item>
         <el-form-item label="学时" prop="xs">
           <el-input v-model="temp.xs" />
+        </el-form-item>
+        <el-form-item label="开设院系" prop="yx">
+          <el-input v-model="temp.yx" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -336,7 +325,8 @@ export default {
         km: undefined,
         xq: undefined,
         xf: undefined,
-        xs: undefined
+        xs: undefined,
+        yx: undefined
       },
       tempClass: {
         gh: undefined,
@@ -359,7 +349,8 @@ export default {
         km: [{ required: true, message: '请填写课名', trigger: 'blur' }],
         xf: [{ required: true, message: '请填写学分', trigger: 'blur' }],
         xs: [{ required: true, message: '请填写学时', trigger: 'blur' }],
-        xq: [{ required: true, message: '请填写学期', trigger: 'blur' }]
+        xq: [{ required: true, message: '请填写学期', trigger: 'blur' }],
+        ys: [{ required: true, message: '请填写院系', trigger: 'blur' }]
       },
       rulesClass: {
         gh: [{ required: true, message: '请填写工号', trigger: 'blur' }],
@@ -372,25 +363,33 @@ export default {
       studentStatus: false
     }
   },
-  created() {
-    this.getList()
+  created: function() {
+    this.$store.dispatch('user/getTerm').then(response => {
+      this.terms = response.terms
+      this.$store.dispatch('admin/getAllCourse', this.listQuery).then(response => {
+        this.list = response
+        this.listLoading = false
+      }).catch(() => {
+      })
+    }).catch(() => {
+    })
   },
   methods: {
+    handleFilter1() {
+      this.listQuery.page = 1
+      this.$store.dispatch('admin/getAllCourse', this.listQuery).then(response => {
+        this.list = response
+        this.listLoading = false
+      }).catch(() => {
+      })
+    },
     createCourse() {
       this.$refs['CourseForm'].validate((valid) => {
         if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          this.$store.dispatch('admin/createCourse', this.temp).then(response => {
+            this.$message(response)
+          }).catch(() => {
+          })
         }
       })
     },
@@ -398,18 +397,11 @@ export default {
     createClass() {
       this.$refs['ClassForm'].validate((valid) => {
         if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          const data = { kh: this.currentRow.kh, xq: this.listQuery.xq, gh: this.tempClass.gh, sksj: this.tempClass.sksj }
+          this.$store.dispatch('admin/createClass', data).then(response => {
+            this.$message(response)
+          }).catch(() => {
+          })
         }
       })
     },
@@ -417,35 +409,27 @@ export default {
     createStudent() {
       this.$refs['StudentForm'].validate((valid) => {
         if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
+          const data = { kh: this.currentClass.kh, xq: this.listQuery.xq, gh: this.currentClass.gh, xh: this.tempStudent.xh }
+          this.$store.dispatch('admin/createStudentInClass', data).then(response => {
+            this.$message(response)
+          }).catch(() => {
+          })
         }
       })
     },
     getList() {
-      // this.listLoading = true
-      // fetchList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.total = response.data.total
-      //
-      //   // Just to simulate the time of the request
-      //   setTimeout(() => {
-      //     this.listLoading = false
-      //   }, 1.5 * 1000)
-      // })
+      this.$store.dispatch('admin/getCourseByTerm', this.listQuery).then(response => {
+        this.list = response
+        this.listLoading = false
+      }).catch(() => {
+      })
     },
     getClass() {
-
+      this.$store.dispatch('admin/getClass', this.currentRow, this.listQuery.xq).then(response => {
+        this.listClass = response
+        console.log(this.list)
+      }).catch(() => {
+      })
     },
     getStudent() {
 
@@ -465,8 +449,13 @@ export default {
     },
 
     handleFilterClass() {
-      this.listQueryClass.page = 1
-      this.getClass()
+      this.classStatus = true
+      console.log('Row', this.currentRow)
+      const data = { kh: this.currentRow.kh, xq: this.listQuery.xq, gh: this.listQueryClass.gh }
+      this.$store.dispatch('admin/getClass', data).then(response => {
+        this.listClass = response
+      }).catch(() => {
+      })
     },
     handleClearClass() {
       this.listQueryClass = {
@@ -478,8 +467,13 @@ export default {
       }
     },
     handleFilterStudent() {
-      this.listQueryStudent.page = 1
-      this.getStudent()
+      this.studentStatus = true
+      console.log('Row', this.currentClass)
+      const data = { kh: this.currentClass.kh, xq: this.listQuery.xq, gh: this.currentClass.gh, xh: this.listQueryStudent.xh }
+      this.$store.dispatch('admin/getStudent', data).then(response => {
+        this.listStudent = response
+      }).catch(() => {
+      })
     },
     handleClearStudent() {
       this.listQueryStudent = {
@@ -542,9 +536,21 @@ export default {
     },
     handleClass() {
       this.classStatus = true
+      console.log('Row', this.currentRow)
+      const data = { kh: this.currentRow.kh, xq: this.listQuery.xq }
+      this.$store.dispatch('admin/getClass', data).then(response => {
+        this.listClass = response
+      }).catch(() => {
+      })
     },
     handleStudent() {
       this.studentStatus = true
+      console.log('Row', this.currentClass)
+      const data = { kh: this.currentClass.kh, xq: this.listQuery.xq, gh: this.currentClass.gh }
+      this.$store.dispatch('admin/getStudent', data).then(response => {
+        this.listStudent = response
+      }).catch(() => {
+      })
     },
     // handleUpdate(row) {
     //   this.temp = Object.assign({}, row) // copy obj
@@ -575,33 +581,29 @@ export default {
     //   })
     // },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      console.log('Row', this.currentClass)
+      const data = { kh: this.currentRow.kh }
+      this.$store.dispatch('admin/deletCourse', data).then(response => {
+        this.$message(response)
+      }).catch(() => {
       })
-      this.list.splice(index, 1)
+      // this.list.splice(index, 1)
     },
 
     handleClassDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      const data = { kh: this.currentClass.kh, xq: this.listQuery.xq, gh: this.currentClass.gh, sksj: this.currentClass.sksj }
+      this.$store.dispatch('admin/deletClass', data).then(response => {
+        this.$message(response)
+      }).catch(() => {
       })
-      this.list.splice(index, 1)
     },
 
     handleStudentDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      const data = { kh: this.currentClass.kh, xq: this.listQuery.xq, gh: this.currentClass.gh, xh: this.currentStudent.xh }
+      this.$store.dispatch('admin/deletStudentFromClass', data).then(response => {
+        this.$message(response)
+      }).catch(() => {
       })
-      this.list.splice(index, 1)
     }
     // handleFetchPv(pv) {
     //   fetchPv(pv).then(response => {

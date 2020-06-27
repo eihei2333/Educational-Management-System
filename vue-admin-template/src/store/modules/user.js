@@ -1,6 +1,7 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, getTerm, getCollege, changePassword } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { setSx } from '@/api/admin'
 
 const getDefaultState = () => {
   return {
@@ -28,8 +29,24 @@ const mutations = {
 }
 
 const actions = {
+  changePassword({ state }, pass) {
+    const usr = state.token
+    const pwd = pass.pass
+    console.log('pass', pass)
+    return new Promise((resolve, reject) => {
+      changePassword({ usr: usr, pwd: pwd }).then(response => {
+        const { data } = response
+        console.log('data', data, response)
+        resolve(data)
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
   // user login
   login({ commit }, userInfo) {
+    console.log('userInfo', userInfo)
     const { identification, username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ identification: identification, username: username.trim(), password: password, identification1: 'sss' }).then(response => {
@@ -40,6 +57,32 @@ const actions = {
         resolve()
       }).catch(error => {
         console.log(error)
+        reject(error)
+      })
+    })
+  },
+
+  getTerm({ state }) {
+    return new Promise((resolve, reject) => {
+      getTerm(state.token).then(response => {
+        console.log('data')
+        const { data } = response
+        console.log(data)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getCollege({ state }) {
+    return new Promise((resolve, reject) => {
+      getCollege(state.token).then(response => {
+        console.log('data')
+        const { data } = response
+        console.log(data)
+        resolve(data)
+      }).catch(error => {
         reject(error)
       })
     })
@@ -86,6 +129,19 @@ const actions = {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       resolve()
+    })
+  },
+  setSx({ commit }, creditSetting) {
+    console.log('setSx', creditSetting)
+    return new Promise((resolve, reject) => {
+      setSx({ term: creditSetting.term, xy: creditSetting.yxh, xf: creditSetting.credit }).then(response => {
+        const { data } = response
+        console.log('data', data, response)
+        resolve(data)
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
     })
   }
 }
