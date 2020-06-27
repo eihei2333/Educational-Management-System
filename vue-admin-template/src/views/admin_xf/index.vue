@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="TermForm" :model="currentTerm" label-width="200px" :rules="rules">
+    <el-form ref="currentTerm" :model="currentTerm" label-width="200px" :rules="rules">
       <el-form-item label="设置当前学期" prop="term">
         <el-select v-model="currentTerm.term" placeholder="请选择当前学期">
           <el-option v-for="item in terms" :key="item" :label="item" :value="item" />
@@ -11,7 +11,7 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="CreditForm" :model="creditSetting" label-width="200px" :rules="rules">
+    <el-form ref="creditSetting" :model="creditSetting" label-width="200px" :rules="rules">
       <el-form-item label="选择院系学分上限" required>
         <el-col :span="5">
           <el-form-item prop="yxh">
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     onSubmitTerm() {
-      this.$refs['TermForm'].validate((valid) => {
+      this.$refs['currentTerm'].validate((valid) => {
         if (valid) {
           this.$message('submit!')
           // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
@@ -91,7 +91,7 @@ export default {
       })
     },
     onSubmitCredit() {
-      this.$refs['CreditForm'].validate((valid) => {
+      this.$refs['creditSetting'].validate((valid) => {
         if (valid) {
           this.$message('submit!')
           // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id

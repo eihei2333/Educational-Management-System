@@ -113,7 +113,7 @@
     <!--    <el-button type="primary" size="mini" @click="handleUpdate()">-->
     <!--      登记成绩-->
     <!--    </el-button>-->
-    <ve-pie :data="chartData" />
+    <ve-pie v-if="studentStatus" :data="chartData" />
     <el-dialog :title="登记成绩" :visible.sync="dialogClassFormVisible">
       <el-form ref="ClassForm" :rules="rulesClass" :model="tempClass" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
         <el-form-item label="平时成绩" prop="pscj">
