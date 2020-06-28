@@ -34,6 +34,8 @@ def getStudent(data):
     score=[0]*4
     for i in tmp:
         i = list(i)
+        if type(i[5])==type(None):
+            continue
         if int(i[5])>90:
             score[0]=score[0]+1
         elif int(i[5])>80:

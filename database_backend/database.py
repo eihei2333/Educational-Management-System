@@ -1189,7 +1189,10 @@ def insertOnE(xh, xq, kh, gh):
     time1 = searchOnO(0, 0, 0, 1, xq=xq, kh=kh, gh=gh)[0][0]  # 返回当前门课程的上课时间
     res = searchOnE(0, 0, 1, 1, xh=xh, xq=xq)
     for x in res:
-        time2 = searchOnO(0, 0, 0, 1, xq=xq, kh=x[0], gh=x[1])[0][0]
+        k=searchOnO(0, 0, 0, 1, xq=xq, kh=x[0], gh=x[1])
+        if len(k)>0:
+            time2 = k[0][0]
+        else:time2=''
         if judgeclasstime(time1, time2) == False:
             return -2
 

@@ -4,7 +4,7 @@ from database import *
 # print(updatePwd("ss","123456"))
 # print(login("ff","123456","admin"))
 # print(insertOnUser('admin','111111','admin'))
-# print(insertOnUser('0101','111111','teacher'))
+# print(insertOnUser('0201','111111','teacher'))
 def updatexf(term,xy,xf):
     # xy = searchOnD(isyxh=True, mc=xy)[0][0]
     if searchOnInfo(xq=term,yxh=xy):
